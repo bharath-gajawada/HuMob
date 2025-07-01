@@ -1,0 +1,97 @@
+1	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+3.6s	2	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+3.6s	3	0.00s - to python to disable frozen modules.
+3.6s	4	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+4.3s	5	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+4.3s	6	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+4.3s	7	0.00s - to python to disable frozen modules.
+4.3s	8	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+11.1s	9	  Preparing metadata (setup.py) ... [?25l[?25hdone
+
+12.2s	10	  Building wheel for geobleu (setup.py) ... [?25l[?25hdone
+
+13.8s	11	Note: you may need to restart the kernel to use updated packages.
+16.9s	12	Computing results for all cities...
+16.9s	13	
+16.9s	14	>>> Starting City A
+16.9s	15	Computing train aggregates for City A
+16.9s	16	>>> Computing train aggregates for City A ...
+233.6s	17	Train aggregates done: GM=(123,86), GMODE=(135,77), 150000 users' means, 150000 users' modes, 150000 users' unigrams, 150000 users' bigrams.
+233.8s	18	✓ Checkpoint saved: /kaggle/working/checkpoints/aggregates_city_A_mean_df
+233.8s	19	✓ Checkpoint saved: /kaggle/working/checkpoints/aggregates_city_A_mode_df
+267.1s	20	✗ Failed to save checkpoint /kaggle/working/checkpoints/aggregates_city_A_aggregates: keys must be str, int, float, bool or None, not tuple
+267.1s	21	>>> Building test DataFrame for City A ...
+290.8s	22	Test DataFrame built: shape = (18859525, 5)
+290.8s	23	City A -> Global Mean prediction ...
+324.4s	24	    ▶ Evaluating GEO-BLEU on 147000 users...
+5327.8s	25	Global Mean GEO-BLEU = 0.00029
+5327.8s	26	City A -> Global Mode prediction ...
+5360.9s	27	    ▶ Evaluating GEO-BLEU on 147000 users...
+10370.9s	28	Global Mode GEO-BLEU = 0.00126
+10370.9s	29	City A -> Per-User Mean prediction ...
+10402.7s	30	    ▶ Evaluating GEO-BLEU on 147000 users...
+15400.5s	31	Per-User Mean GEO-BLEU = 0.01651
+15400.5s	32	City A -> Per-User Mode prediction ...
+15434.7s	33	    ▶ Evaluating GEO-BLEU on 147000 users...
+20459.4s	34	Per-User Mode GEO-BLEU = 0.07918
+20459.4s	35	City A -> Unigram Model prediction ...
+20459.4s	36	Generating Unigram predictions ...
+25474.9s	37	    ▶ Evaluating GEO-BLEU on 147000 users...
+30528.6s	38	Unigram Model GEO-BLEU = 0.03585
+30528.6s	39	City A -> Bigram Model prediction ...
+30528.6s	40	Generating Bigram Model predictions ...
+32219.8s	41	    ▶ Evaluating GEO-BLEU on 147000 users...
+37448.2s	42	Bigram Model GEO-BLEU = 0.05243
+37448.2s	43	City A -> Bigram Model (top_p=0.7) prediction ...
+37448.2s	44	Generating Bigram Model (top_p=0.7) predictions ...
+39848.5s	45	    ▶ Evaluating GEO-BLEU on 147000 users...
+
+
+
+	1	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+4.1s	2	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+4.1s	3	0.00s - to python to disable frozen modules.
+4.1s	4	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+5.0s	5	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+5.0s	6	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+5.0s	7	0.00s - to python to disable frozen modules.
+5.0s	8	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+12.9s	9	  Preparing metadata (setup.py) ... [?25l[?25hdone
+
+14.2s	10	  Building wheel for geobleu (setup.py) ... [?25l[?25hdone
+
+16.4s	11	Note: you may need to restart the kernel to use updated packages.
+20.1s	12	Computing results for all cities...
+20.1s	13	
+20.1s	14	>>> Starting City A
+20.1s	15	Computing train aggregates for City A
+20.1s	16	>>> Computing train aggregates for City A ...
+323.2s	17	Train aggregates done: GM=(123,86), GMODE=(135,77), 150000 users' means, 150000 users' modes, 150000 users' unigrams, 150000 users' bigrams.
+323.4s	18	✓ Checkpoint saved: /kaggle/working/checkpoints/aggregates_city_A_mean_df
+323.4s	19	✓ Checkpoint saved: /kaggle/working/checkpoints/aggregates_city_A_mode_df
+379.7s	20	✗ Failed to save checkpoint /kaggle/working/checkpoints/aggregates_city_A_aggregates: keys must be str, int, float, bool or None, not tuple
+379.7s	21	>>> Building test DataFrame for City A ...
+416.1s	22	Test DataFrame built: shape = (18859525, 5)
+416.4s	23	City A -> Bigram Model (top_p=0.7) prediction ...
+416.4s	24	Generating Bigram Model (top_p=0.7) predictions ...
+3528.8s	25	    ▶ Evaluating GEO-BLEU on 147000 users...
+11239.8s	26	Bigram Model (top_p=0.7) GEO-BLEU = 0.07819
+11239.8s	27	✓ Checkpoint saved: /kaggle/working/checkpoints/results_city_A_results
+11239.8s	28	<<< Finished City A with results: {'Bigram Model (top_p=0.7)': 0.07819}
+11239.8s	29	
+11239.9s	30	✓ Checkpoint saved: /kaggle/working/checkpoints/results_final_results_df
+11239.9s	31	✓ Checkpoint saved: /kaggle/working/checkpoints/results_final_results_dict
+11239.9s	32	
+11239.9s	33	=== Final GEO-BLEU Scores ===
+11239.9s	34	✓ Checkpoint saved: /kaggle/working/checkpoints/results_evaluation_summary
+11239.9s	35	
+11239.9s	36	Best performing method: Bigram Model (top_p=0.7) (Score: 0.07819)
+11239.9s	37	All results saved to: /kaggle/working/checkpoints
+11244.1s	38	/usr/local/lib/python3.11/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=["remove_papermill_header.RemovePapermillHeader"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.
+11244.1s	39	  warn(
+11244.2s	40	[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+11244.6s	41	[NbConvertApp] Writing 107398 bytes to __notebook__.ipynb
+11246.4s	42	/usr/local/lib/python3.11/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=["nbconvert.preprocessors.ExtractOutputPreprocessor"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.
+11246.4s	43	  warn(
+11246.4s	44	[NbConvertApp] Converting notebook __notebook__.ipynb to html
+11247.6s	45	[NbConvertApp] Writing 451425 bytes to __results__.html
