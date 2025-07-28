@@ -6,9 +6,6 @@ from sklearn.svm import SVR
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import gc # Import garbage collection module
-import sys # Import sys module for stdout redirection
-from contextlib import contextmanager # Import contextmanager for a cleaner way to redirect stdout
-import warnings # Import warnings module
 
 # Import LightGBM and XGBoost
 import lightgbm as lgb
@@ -39,15 +36,15 @@ CITIES = ["F"] # <--- USER: Specify cities to process (e.g., ["B"], ["B", "C"])
 
 # 2. Preprocessing Parameters
 # A set of day numbers (d) that are considered holidays.
-HOLIDAYS = {70, 71} # <--- USER: Adjust holiday day numbers as needed
+HOLIDAYS = {} # <--- USER: Adjust holiday day numbers as needed
 
 # The maximum gap in hours for which linear interpolation will be applied.
 # Gaps larger than this will result in NaNs. (20 30-min time slots = 10 hours)
-INTERPOLATION_MAX_GAP_HOURS = 10 # <--- USER: Adjust interpolation gap
+INTERPOLATION_MAX_GAP_HOURS = 5 # <--- USER: Adjust interpolation gap
 
 # 3. Model Training and Evaluation Parameters
 # Fraction of day 61-75 data to use for testing/validation.
-TEST_SIZE_FRACTION = 0.5 # <--- USER: Adjust train/test split for prediction period
+TEST_SIZE_FRACTION = 0.1 # <--- USER: Adjust train/test split for prediction period
 
 # Choose the model type: 'SVR', 'LightGBM', 'XGBoost'
 MODEL_TYPE = 'LightGBM' # <--- USER: Select your desired model (e.g., 'SVR', 'LightGBM', 'XGBoost')
@@ -61,10 +58,12 @@ SVR_GAMMA = 0.1 # Kernel coefficient
 LGBM_N_ESTIMATORS = 100
 LGBM_LEARNING_RATE = 0.1
 LGBM_MAX_DEPTH = 7
-# To suppress "No further splits with positive gain" warnings, set verbose=-1.
-# These warnings are common when training on small/homogeneous per-user datasets.
-# Note: For complete suppression, we will also redirect stdout/stderr during fitting.
-LGBM_VERBOSE = -1 # <--- USER: Set to 0 for info, >0 for more detail, -1 to suppress warnings
+# LightGBM Warning Note: "No further splits with positive gain" warnings are common
+# when a subset of data (e.g., for a single user's trajectory) is too small or
+# homogeneous for the model to find more beneficial splits. This is often an
+# indication of convergence or data characteristics, not necessarily an error.
+# You can try adjusting parameters like `min_child_samples` or `min_gain_to_split`
+# if you want to force more splits, but it might not improve performance on small subsets.
 # <--- USER: Tune LGBM hyperparameters
 
 # XGBoost Model Hyperparameters (only used if MODEL_TYPE is 'XGBoost')
@@ -78,7 +77,7 @@ XGB_N_JOBS = -1 # Use all available CPU cores
 # Fraction of data to sample per city before feature extraction.
 # Set to 1.0 to use all data (might cause Out-Of-Memory for large files).
 # Start with a small fraction (e.g., 0.1 or 0.05) if you encounter OOM errors.
-SAMPLE_FRACTION_PER_CITY = 0.1 # <--- USER: Fraction of data to sample per city (e.g., 0.1 for 10%)
+SAMPLE_FRACTION_PER_CITY = 1 # <--- USER: Fraction of data to sample per city (e.g., 0.1 for 10%)
 
 
 # ==============================================================================
@@ -210,22 +209,8 @@ class FeatureExtractor:
         return pd.concat(features, ignore_index=True)
 
 # ---- Step 3: Model Training and Prediction (Per User) ----
-@contextmanager
-def suppress_stdout_stderr():
-    """A context manager to suppress both stdout and stderr."""
-    with open(os.devnull, "w") as devnull:
-        old_stdout = sys.stdout
-        old_stderr = sys.stderr
-        sys.stdout = devnull
-        sys.stderr = devnull
-        try:
-            yield
-        finally:
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
-
 def train_and_predict_model(features_df, model_type, test_size_fraction, svr_c, svr_gamma,
-                            lgbm_n_estimators, lgbm_learning_rate, lgbm_max_depth, lgbm_verbose,
+                            lgbm_n_estimators, lgbm_learning_rate, lgbm_max_depth,
                             xgb_n_estimators, xgb_learning_rate, xgb_max_depth, xgb_n_jobs):
     """
     Trains the specified model for x and y coordinates for each user independently and makes predictions.
@@ -249,10 +234,12 @@ def train_and_predict_model(features_df, model_type, test_size_fraction, svr_c, 
         prediction_period_data_user = user_features_df[user_features_df['d'] >= 61]
 
         if prediction_period_data_user.empty:
+            # print(f"    Warning: No prediction period data for user {uid}. Skipping.")
             continue
 
         # Ensure enough samples for splitting, especially for small user trajectories
         if len(prediction_period_data_user) < 2:
+            # print(f"    Warning: Not enough data points ({len(prediction_period_data_user)}) for user {uid} to split prediction period. Skipping.")
             continue
         
         # Ensure enough samples for stratification if needed, though for single user, stratify is not applied
@@ -276,6 +263,7 @@ def train_and_predict_model(features_df, model_type, test_size_fraction, svr_c, 
 
         # Skip if training data is empty after split (e.g., if all data is in test_pred_period_user)
         if X_train_combined_user.empty or X_test_user.empty:
+            # print(f"    Warning: Training or test data for user {uid} is empty after split. Skipping.")
             continue
 
         # Scale features for the current user
@@ -288,8 +276,8 @@ def train_and_predict_model(features_df, model_type, test_size_fraction, svr_c, 
             model_x_user = SVR(kernel='rbf', C=svr_c, gamma=svr_gamma)
             model_y_user = SVR(kernel='rbf', C=svr_c, gamma=svr_gamma)
         elif model_type == 'LightGBM':
-            model_x_user = lgb.LGBMRegressor(n_estimators=lgbm_n_estimators, learning_rate=lgbm_learning_rate, max_depth=lgbm_max_depth, random_state=42, verbose=lgbm_verbose)
-            model_y_user = lgb.LGBMRegressor(n_estimators=lgbm_n_estimators, learning_rate=lgbm_learning_rate, max_depth=lgbm_max_depth, random_state=42, verbose=lgbm_verbose)
+            model_x_user = lgb.LGBMRegressor(n_estimators=lgbm_n_estimators, learning_rate=lgbm_learning_rate, max_depth=lgbm_max_depth, random_state=42)
+            model_y_user = lgb.LGBMRegressor(n_estimators=lgbm_n_estimators, learning_rate=lgbm_learning_rate, max_depth=lgbm_max_depth, random_state=42)
         elif model_type == 'XGBoost':
             model_x_user = xgb.XGBRegressor(n_estimators=xgb_n_estimators, learning_rate=xgb_learning_rate, max_depth=xgb_max_depth, n_jobs=xgb_n_jobs, random_state=42)
             model_y_user = xgb.XGBRegressor(n_estimators=xgb_n_estimators, learning_rate=xgb_learning_rate, max_depth=xgb_max_depth, n_jobs=xgb_n_jobs, random_state=42)
@@ -297,10 +285,8 @@ def train_and_predict_model(features_df, model_type, test_size_fraction, svr_c, 
             raise ValueError(f"Unknown MODEL_TYPE: {model_type}. Choose 'SVR', 'LightGBM', or 'XGBoost'.")
 
         # Train models for the current user
-        # Suppress all output during fit for cleaner console
-        with suppress_stdout_stderr():
-            model_x_user.fit(X_train_scaled_user, y_x_train_combined_user)
-            model_y_user.fit(X_train_scaled_user, y_y_train_combined_user)
+        model_x_user.fit(X_train_scaled_user, y_x_train_combined_user)
+        model_y_user.fit(X_train_scaled_user, y_y_train_combined_user)
 
         # Predict on the test set for the current user
         y_x_pred_user = model_x_user.predict(X_test_scaled_user)
@@ -344,9 +330,6 @@ def main():
     Main function to orchestrate data loading, feature extraction, model training,
     prediction, and evaluation using GEO-BLEU and DTW, processing data city by city.
     """
-    # Filter out specific LightGBM warnings that might still appear
-    warnings.filterwarnings('ignore', category=UserWarning, module='lightgbm')
-    
     # Attempt to import geobleu functions. If unsuccessful, print error and return.
     try:
         from geobleu import calc_geobleu_single, calc_dtw_single
@@ -401,7 +384,7 @@ def main():
             print(f"--- Starting {MODEL_TYPE} Model Training and Prediction for {os.path.basename(input_csv)} ---")
             actual_test_data_city, predicted_test_data_city = train_and_predict_model(
                 features_df, MODEL_TYPE, TEST_SIZE_FRACTION, SVR_C, SVR_GAMMA,
-                LGBM_N_ESTIMATORS, LGBM_LEARNING_RATE, LGBM_MAX_DEPTH, LGBM_VERBOSE, # Pass verbose here
+                LGBM_N_ESTIMATORS, LGBM_LEARNING_RATE, LGBM_MAX_DEPTH,
                 XGB_N_ESTIMATORS, XGB_LEARNING_RATE, XGB_MAX_DEPTH, XGB_N_JOBS
             )
             
@@ -503,7 +486,7 @@ def main():
         else:
             predicted_output_file_name = f"combined_predicted_mobility_{MODEL_TYPE}_sampled{int(SAMPLE_FRACTION_PER_CITY*100)}.csv"
         
-        predicted_output_path = os.path.join("/kaggle/working", predicted_output_file_name)
+        predicted_output_path = os.path.join("./", predicted_output_file_name)
         final_predicted_df.to_csv(predicted_output_path, index=False)
         print(f"\nAll predicted mobility data saved to {predicted_output_path}")
     else:

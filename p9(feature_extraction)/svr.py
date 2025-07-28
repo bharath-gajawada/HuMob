@@ -5,20 +5,6 @@ import os
 from sklearn.svm import SVR
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-import gc # Import garbage collection module
-
-# Import LightGBM and XGBoost
-import lightgbm as lgb
-import xgboost as xgb
-
-# IMPORTANT: To run this script in a Kaggle Notebook, ensure 'geobleu' is installed.
-#
-# You typically run installation commands in a separate code cell at the beginning of your notebook:
-# !pip install pandas numpy scikit-learn lightgbm xgboost
-# !pip install git+https://github.com/yahoojapan/geobleu.git
-#
-# If you encounter "AttributeError: module 'geobleu' has no attribute 'geobleu'"
-# or "ModuleNotFoundError", please ensure the library is installed correctly.
 
 # ==============================================================================
 # User-Configurable Parameters
@@ -27,12 +13,12 @@ import xgboost as xgb
 # 1. Input Data Configuration
 # Path to the directory containing your mobility data CSV files within Kaggle.
 # This path is common for competition datasets.
-DATA_DIR = "../data" # <--- USER: Set your data directory path here
+DATA_DIR = "/kaggle/input/humob-data/15313913" # <--- USER: Set your data directory path here
 
 # List of cities to process. Files are expected to be named like 'city_B_challengedata.csv', etc.
 # If your files are just 'data.csv', set CITIES = [""] and ensure DATA_DIR points directly to 'data.csv'
-CITIES = ["F"] # <--- USER: Specify cities to process (e.g., ["B"], ["B", "C"])
-# For very large files, consider processing one city at a time, e.g., CITIES = ["D"]
+# or modify get_input_files to handle your specific naming convention.
+CITIES = ["D"] # <--- USER: Specify cities to process (e.g., ["B"], ["B", "C"])
 
 # 2. Preprocessing Parameters
 # A set of day numbers (d) that are considered holidays.
@@ -46,39 +32,10 @@ INTERPOLATION_MAX_GAP_HOURS = 5 # <--- USER: Adjust interpolation gap
 # Fraction of day 61-75 data to use for testing/validation.
 TEST_SIZE_FRACTION = 0.1 # <--- USER: Adjust train/test split for prediction period
 
-# Choose the model type: 'SVR', 'LightGBM', 'XGBoost'
-MODEL_TYPE = 'LightGBM' # <--- USER: Select your desired model (e.g., 'SVR', 'LightGBM', 'XGBoost')
-
-# SVR Model Hyperparameters (only used if MODEL_TYPE is 'SVR')
+# SVR Model Hyperparameters (RBF kernel is used as per paper)
 SVR_C = 100    # Regularization parameter
 SVR_GAMMA = 0.1 # Kernel coefficient
-# <--- USER: Tune SVR_C and SVR_GAMMA for SVR
-
-# LightGBM Model Hyperparameters (only used if MODEL_TYPE is 'LightGBM')
-LGBM_N_ESTIMATORS = 100
-LGBM_LEARNING_RATE = 0.1
-LGBM_MAX_DEPTH = 7
-# LightGBM Warning Note: "No further splits with positive gain" warnings are common
-# when a subset of data (e.g., for a single user's trajectory) is too small or
-# homogeneous for the model to find more beneficial splits. This is often an
-# indication of convergence or data characteristics, not necessarily an error.
-# You can try adjusting parameters like `min_child_samples` or `min_gain_to_split`
-# if you want to force more splits, but it might not improve performance on small subsets.
-# <--- USER: Tune LGBM hyperparameters
-
-# XGBoost Model Hyperparameters (only used if MODEL_TYPE is 'XGBoost')
-XGB_N_ESTIMATORS = 100
-XGB_LEARNING_RATE = 0.1
-XGB_MAX_DEPTH = 7
-XGB_N_JOBS = -1 # Use all available CPU cores
-# <--- USER: Tune XGB hyperparameters
-
-# 4. Data Sampling Parameters
-# Fraction of data to sample per city before feature extraction.
-# Set to 1.0 to use all data (might cause Out-Of-Memory for large files).
-# Start with a small fraction (e.g., 0.1 or 0.05) if you encounter OOM errors.
-SAMPLE_FRACTION_PER_CITY = 1 # <--- USER: Fraction of data to sample per city (e.g., 0.1 for 10%)
-
+# <--- USER: Tune SVR_C and SVR_GAMMA for optimal performance
 
 # ==============================================================================
 # Helper Functions for Data Loading and File Selection
@@ -208,126 +165,78 @@ class FeatureExtractor:
 
         return pd.concat(features, ignore_index=True)
 
-# ---- Step 3: Model Training and Prediction (Per User) ----
-def train_and_predict_model(features_df, model_type, test_size_fraction, svr_c, svr_gamma,
-                            lgbm_n_estimators, lgbm_learning_rate, lgbm_max_depth,
-                            xgb_n_estimators, xgb_learning_rate, xgb_max_depth, xgb_n_jobs):
+# ---- Step 3: SVR Model Training and Prediction ----
+def train_and_predict_svr(features_df, test_size_fraction, svr_c, svr_gamma):
     """
-    Trains the specified model for x and y coordinates for each user independently and makes predictions.
+    Trains SVR models for x and y coordinates and makes predictions based on the specified split.
     """
-    all_actual_data = []
-    all_predicted_data = []
+    feature_columns = [col for col in features_df.columns if col not in ['uid', 'd', 't', 'x', 'y']]
+    X = features_df[feature_columns]
+    y_x = features_df['x']
+    y_y = features_df['y']
 
-    unique_uids = features_df['uid'].unique()
-    print(f"  Training models for {len(unique_uids)} unique users...")
+    historical_data = features_df[features_df['d'] <= 60]
+    prediction_period_data = features_df[features_df['d'] >= 61]
 
-    for uid in unique_uids:
-        user_features_df = features_df[features_df['uid'] == uid].copy()
+    if prediction_period_data.empty:
+        print("Warning: No data for days 61-75. Cannot perform train/test split for prediction period.")
+        return pd.DataFrame(), pd.DataFrame()
 
-        # Define features (X) and targets (y) for the current user
-        feature_columns = [col for col in user_features_df.columns if col not in ['uid', 'd', 't', 'x', 'y']]
-        X_user = user_features_df[feature_columns]
-        y_x_user = user_features_df['x']
-        y_y_user = user_features_df['y']
+    # Split the prediction period data into training and test/validation fractions
+    if len(prediction_period_data['uid'].unique()) < 2:
+        train_pred_period, test_pred_period = train_test_split(
+            prediction_period_data, test_size=test_size_fraction, random_state=42
+        )
+    else:
+        train_pred_period, test_pred_period = train_test_split(
+            prediction_period_data, test_size=test_size_fraction, random_state=42, stratify=prediction_period_data['uid']
+        )
 
-        historical_data_user = user_features_df[user_features_df['d'] <= 60]
-        prediction_period_data_user = user_features_df[user_features_df['d'] >= 61]
+    X_train_combined = pd.concat([historical_data[feature_columns], train_pred_period[feature_columns]], ignore_index=True)
+    y_x_train_combined = pd.concat([historical_data['x'], train_pred_period['x']], ignore_index=True)
+    y_y_train_combined = pd.concat([historical_data['y'], train_pred_period['y']], ignore_index=True)
 
-        if prediction_period_data_user.empty:
-            # print(f"    Warning: No prediction period data for user {uid}. Skipping.")
-            continue
+    X_test = test_pred_period[feature_columns]
+    y_x_test = test_pred_period['x']
+    y_y_test = test_pred_period['y']
 
-        # Ensure enough samples for splitting, especially for small user trajectories
-        if len(prediction_period_data_user) < 2:
-            # print(f"    Warning: Not enough data points ({len(prediction_period_data_user)}) for user {uid} to split prediction period. Skipping.")
-            continue
-        
-        # Ensure enough samples for stratification if needed, though for single user, stratify is not applied
-        if len(prediction_period_data_user['uid'].unique()) < 2:
-            train_pred_period_user, test_pred_period_user = train_test_split(
-                prediction_period_data_user, test_size=test_size_fraction, random_state=42
-            )
-        else: # This case is technically not hit for single user, but kept for robustness
-            train_pred_period_user, test_pred_period_user = train_test_split(
-                prediction_period_data_user, test_size=test_size_fraction, random_state=42, stratify=prediction_period_data_user['uid']
-            )
+    scaler_X = StandardScaler()
+    X_train_scaled = scaler_X.fit_transform(X_train_combined)
+    X_test_scaled = scaler_X.transform(X_test)
 
-        # Combine historical data with the training fraction of the prediction period data for this user
-        X_train_combined_user = pd.concat([historical_data_user[feature_columns], train_pred_period_user[feature_columns]], ignore_index=True)
-        y_x_train_combined_user = pd.concat([historical_data_user['x'], train_pred_period_user['x']], ignore_index=True)
-        y_y_train_combined_user = pd.concat([historical_data_user['y'], train_pred_period_user['y']], ignore_index=True)
+    svr_x = SVR(kernel='rbf', C=svr_c, gamma=svr_gamma)
+    svr_y = SVR(kernel='rbf', C=svr_c, gamma=svr_gamma)
 
-        X_test_user = test_pred_period_user[feature_columns]
-        y_x_test_user = test_pred_period_user['x']
-        y_y_test_user = test_pred_period_user['y']
+    print("Training SVR models...")
+    svr_x.fit(X_train_scaled, y_x_train_combined)
+    svr_y.fit(X_train_scaled, y_y_train_combined)
+    print("SVR models trained.")
 
-        # Skip if training data is empty after split (e.g., if all data is in test_pred_period_user)
-        if X_train_combined_user.empty or X_test_user.empty:
-            # print(f"    Warning: Training or test data for user {uid} is empty after split. Skipping.")
-            continue
+    y_x_pred = svr_x.predict(X_test_scaled)
+    y_y_pred = svr_y.predict(X_test_scaled)
 
-        # Scale features for the current user
-        scaler_X_user = StandardScaler()
-        X_train_scaled_user = scaler_X_user.fit_transform(X_train_combined_user)
-        X_test_scaled_user = scaler_X_user.transform(X_test_user)
+    test_data_actual = pd.DataFrame({
+        'uid': test_pred_period['uid'],
+        'd': test_pred_period['d'],
+        't': test_pred_period['t'],
+        'x_actual': y_x_test,
+        'y_actual': y_y_test
+    }).reset_index(drop=True)
 
-        # Initialize models based on MODEL_TYPE
-        if model_type == 'SVR':
-            model_x_user = SVR(kernel='rbf', C=svr_c, gamma=svr_gamma)
-            model_y_user = SVR(kernel='rbf', C=svr_c, gamma=svr_gamma)
-        elif model_type == 'LightGBM':
-            model_x_user = lgb.LGBMRegressor(n_estimators=lgbm_n_estimators, learning_rate=lgbm_learning_rate, max_depth=lgbm_max_depth, random_state=42)
-            model_y_user = lgb.LGBMRegressor(n_estimators=lgbm_n_estimators, learning_rate=lgbm_learning_rate, max_depth=lgbm_max_depth, random_state=42)
-        elif model_type == 'XGBoost':
-            model_x_user = xgb.XGBRegressor(n_estimators=xgb_n_estimators, learning_rate=xgb_learning_rate, max_depth=xgb_max_depth, n_jobs=xgb_n_jobs, random_state=42)
-            model_y_user = xgb.XGBRegressor(n_estimators=xgb_n_estimators, learning_rate=xgb_learning_rate, max_depth=xgb_max_depth, n_jobs=xgb_n_jobs, random_state=42)
-        else:
-            raise ValueError(f"Unknown MODEL_TYPE: {model_type}. Choose 'SVR', 'LightGBM', or 'XGBoost'.")
+    test_data_predicted = pd.DataFrame({
+        'uid': test_pred_period['uid'],
+        'd': test_pred_period['d'],
+        't': test_pred_period['t'],
+        'x_predicted': y_x_pred,
+        'y_predicted': y_y_pred
+    }).reset_index(drop=True)
 
-        # Train models for the current user
-        model_x_user.fit(X_train_scaled_user, y_x_train_combined_user)
-        model_y_user.fit(X_train_scaled_user, y_y_train_combined_user)
-
-        # Predict on the test set for the current user
-        y_x_pred_user = model_x_user.predict(X_test_scaled_user)
-        y_y_pred_user = model_y_user.predict(X_test_scaled_user)
-
-        # Collect actual and predicted data for the current user
-        all_actual_data.append(pd.DataFrame({
-            'uid': test_pred_period_user['uid'],
-            'd': test_pred_period_user['d'],
-            't': test_pred_period_user['t'],
-            'x_actual': y_x_test_user,
-            'y_actual': y_y_test_user
-        }).reset_index(drop=True))
-
-        all_predicted_data.append(pd.DataFrame({
-            'uid': test_pred_period_user['uid'],
-            'd': test_pred_period_user['d'],
-            't': test_pred_period_user['t'],
-            'x_predicted': y_x_pred_user,
-            'y_predicted': y_y_pred_user
-        }).reset_index(drop=True))
-        
-        # Explicitly delete models and data for current user to free memory
-        del model_x_user, model_y_user, X_user, y_x_user, y_y_user, historical_data_user, \
-            prediction_period_data_user, train_pred_period_user, test_pred_period_user, \
-            X_train_combined_user, y_x_train_combined_user, y_y_train_combined_user, \
-            X_test_user, y_x_test_user, y_y_test_user, scaler_X_user, X_train_scaled_user, X_test_scaled_user, \
-            y_x_pred_user, y_y_pred_user
-        gc.collect()
-
-
-    # Concatenate all collected data from all users
-    final_actual_data = pd.concat(all_actual_data, ignore_index=True) if all_actual_data else pd.DataFrame()
-    final_predicted_data = pd.concat(all_predicted_data, ignore_index=True) if all_predicted_data else pd.DataFrame()
-
-    return final_actual_data, final_predicted_data
+    return test_data_actual, test_data_predicted
 
 # ---- Main Execution Function ----
 def main():
     """
-    Main function to orchestrate data loading, feature extraction, model training,
+    Main function to orchestrate data loading, feature extraction, SVR training,
     prediction, and evaluation using GEO-BLEU and DTW, processing data city by city.
     """
     # Attempt to import geobleu functions. If unsuccessful, print error and return.
@@ -351,57 +260,33 @@ def main():
     # Lists to store scores from each city
     all_geobleu_scores = []
     all_dtw_scores = []
-    all_predicted_data_overall = [] # To optionally save all predicted data from all cities
+    all_predicted_data = [] # To optionally save all predicted data
 
     for input_csv in input_csv_files:
         print(f"\n--- Processing data from: {input_csv} ---")
         try:
             df = load_data(input_csv)
-
-            # Apply sampling if configured
-            if SAMPLE_FRACTION_PER_CITY < 1.0 and not df.empty:
-                original_rows = len(df)
-                # Sample by UID to keep user trajectories intact
-                unique_uids_to_sample = df['uid'].unique()
-                sampled_uids = np.random.choice(unique_uids_to_sample, size=int(len(unique_uids_to_sample) * SAMPLE_FRACTION_PER_CITY), replace=False)
-                df = df[df['uid'].isin(sampled_uids)].reset_index(drop=True)
-                print(f"  Sampled {len(df)} rows ({SAMPLE_FRACTION_PER_CITY*100:.1f}%) from original {original_rows} rows by UID.")
-            
-            # Explicitly clear memory before heavy processing for current city
-            gc.collect()
-
             features_df = extractor.extract(df)
-            
-            # Clear original DataFrame to free memory
-            del df
-            gc.collect()
-
 
             if features_df.empty:
                 print(f"No features extracted for {input_csv}. Skipping model training for this file.")
                 continue
 
-            print(f"--- Starting {MODEL_TYPE} Model Training and Prediction for {os.path.basename(input_csv)} ---")
-            actual_test_data_city, predicted_test_data_city = train_and_predict_model(
-                features_df, MODEL_TYPE, TEST_SIZE_FRACTION, SVR_C, SVR_GAMMA,
-                LGBM_N_ESTIMATORS, LGBM_LEARNING_RATE, LGBM_MAX_DEPTH,
-                XGB_N_ESTIMATORS, XGB_LEARNING_RATE, XGB_MAX_DEPTH, XGB_N_JOBS
+            print(f"--- Starting SVR Model Training and Prediction for {os.path.basename(input_csv)} ---")
+            actual_test_data, predicted_test_data = train_and_predict_svr(
+                features_df, TEST_SIZE_FRACTION, SVR_C, SVR_GAMMA
             )
-            
-            # Clear features_df to free memory
-            del features_df
-            gc.collect()
 
-
-            if not actual_test_data_city.empty and not predicted_test_data_city.empty:
+            if not actual_test_data.empty and not predicted_test_data.empty:
                 # Prepare trajectories for GEO-BLEU and DTW calculation for the current city
+                # Each element in these lists will be a single trajectory (list of (uid, d, t, x, y) tuples)
                 true_trajectories_list = []
                 pred_trajectories_list = []
 
                 # Merge actual and predicted data to ensure alignment by uid, d, t
                 merged_test_data = pd.merge(
-                    actual_test_data_city,
-                    predicted_test_data_city,
+                    actual_test_data,
+                    predicted_test_data,
                     on=['uid', 'd', 't'],
                     how='inner' # Use inner join to only keep common (uid, d, t) points
                 ).sort_values(['uid', 'd', 't']).reset_index(drop=True)
@@ -449,12 +334,12 @@ def main():
                     else:
                         print(f"  No valid DTW scores for {os.path.basename(input_csv)}.")
 
-                    all_predicted_data_overall.append(predicted_test_data_city)
+                    all_predicted_data.append(predicted_test_data)
                 else:
                     print(f"No valid trajectories for metrics calculation in {os.path.basename(input_csv)} after splitting.")
 
             else:
-                print(f"Model training or prediction resulted in empty data for {os.path.basename(input_csv)}. Skipping evaluation.")
+                print(f"SVR training or prediction resulted in empty data for {os.path.basename(input_csv)}. Skipping evaluation.")
 
         except Exception as e:
             print(f"Error processing {input_csv}: {e}")
@@ -476,17 +361,17 @@ def main():
         print("No DTW scores calculated across all files.")
 
     # Save all predicted data if any was generated
-    if all_predicted_data_overall:
-        final_predicted_df = pd.concat(all_predicted_data_overall, ignore_index=True)
+    if all_predicted_data:
+        final_predicted_df = pd.concat(all_predicted_data, ignore_index=True)
         # Construct the output file path for Kaggle
         if len(CITIES) == 1 and CITIES[0] != "":
-            predicted_output_file_name = f"predicted_mobility_{MODEL_TYPE}_{CITIES[0]}_sampled{int(SAMPLE_FRACTION_PER_CITY*100)}.csv"
+            predicted_output_file_name = f"predicted_mobility_{CITIES[0]}.csv"
         elif len(CITIES) == 1 and CITIES[0] == "": # Case for single 'data.csv'
-            predicted_output_file_name = f"predicted_mobility_{MODEL_TYPE}_sampled{int(SAMPLE_FRACTION_PER_CITY*100)}.csv"
+            predicted_output_file_name = "predicted_mobility.csv"
         else:
-            predicted_output_file_name = f"combined_predicted_mobility_{MODEL_TYPE}_sampled{int(SAMPLE_FRACTION_PER_CITY*100)}.csv"
+            predicted_output_file_name = "combined_predicted_mobility.csv"
         
-        predicted_output_path = os.path.join("./", predicted_output_file_name)
+        predicted_output_path = os.path.join("/kaggle/working", predicted_output_file_name)
         final_predicted_df.to_csv(predicted_output_path, index=False)
         print(f"\nAll predicted mobility data saved to {predicted_output_path}")
     else:
@@ -496,4 +381,7 @@ def main():
 
 # Entry point for the script
 if __name__ == "__main__":
+
+
     main()
+
