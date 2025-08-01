@@ -13,3 +13,14 @@
 | Bigram Model (top_p=0.7)  | 0.07819  | 0.08984  | 0.08002  | 0.09044  | 0.08463  |
 | TT-KNN (day wise)         | 0.21327  | 0.22456  | 0.23458  | 0.23771  | 0.22750  |
 | SVR(LightGBM + XGBoost)         | -  | 0.1390  | 0.1493  | 0.1536  | 0.1473  |
+
+
+## Important Dates
+
+- Data open: April 30 (Wed), 2025
+- Midterm evaluation submission deadline (optional): 11:59 pm AoE, July 30 (Wed), 2025
+- Midterm evaluation result announcement: August 20 (Wed), 2025
+- Submission deadline: 11:59 pm AoE, September 10 (Wed), 2025
+- Result announcement & Invitation of papers for submissions: October 1 (Wed), 2025
+- Submission deadline for invited papers: 11:59 pm AoE, October 15 (Wed), 2025
+- GISCUP presentations: November 5 (Wed), 2025
