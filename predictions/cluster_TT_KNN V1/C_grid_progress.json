@@ -1,0 +1,38 @@
+[
+  {
+    "topL": 150,
+    "n_clusters": 100,
+    "score": 0.094889783982276,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 150,
+    "n_clusters": 150,
+    "score": 0.0952142798383781,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 200,
+    "n_clusters": 100,
+    "score": 0.09519476324190027,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 200,
+    "n_clusters": 150,
+    "score": 0.09531478498100966,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 250,
+    "n_clusters": 100,
+    "score": 0.09512450996600698,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 250,
+    "n_clusters": 150,
+    "score": 0.0952290357531012,
+    "use_cluster_tt": true
+  }
+]

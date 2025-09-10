@@ -406,3 +406,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# python3 validator.py b foo/city_B_challengedata.csv bar/dreamteam_cityB_humob25.csv

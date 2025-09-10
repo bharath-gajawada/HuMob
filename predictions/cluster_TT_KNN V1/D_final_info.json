@@ -1,0 +1,9 @@
+{
+  "score_local": 0.1063843504609507,
+  "info": {
+    "num_users": 680,
+    "num_preds": 93852
+  },
+  "topL": 200,
+  "n_clusters": 150
+}

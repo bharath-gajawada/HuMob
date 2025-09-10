@@ -1,0 +1,56 @@
+[
+  {
+    "topL": 100,
+    "n_clusters": 100,
+    "score": 0.10597793374227849,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 100,
+    "n_clusters": 150,
+    "score": 0.10613600205950209,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 100,
+    "n_clusters": 200,
+    "score": 0.10613714879452224,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 200,
+    "n_clusters": 100,
+    "score": 0.10598267320538605,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 200,
+    "n_clusters": 150,
+    "score": 0.10635434337119726,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 200,
+    "n_clusters": 200,
+    "score": 0.10624814580254498,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 300,
+    "n_clusters": 100,
+    "score": 0.10597895115158436,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 300,
+    "n_clusters": 150,
+    "score": 0.10607656111127313,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 300,
+    "n_clusters": 200,
+    "score": 0.10623810733382659,
+    "use_cluster_tt": true
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "topL": 200,
+    "n_clusters": 200,
+    "score": 0.10477774754964858,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 200,
+    "n_clusters": 300,
+    "score": 0.10480021515334821,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 300,
+    "n_clusters": 200,
+    "score": 0.10477823805469402,
+    "use_cluster_tt": true
+  },
+  {
+    "topL": 300,
+    "n_clusters": 300,
+    "score": 0.10480021515334821,
+    "use_cluster_tt": true
+  }
+]

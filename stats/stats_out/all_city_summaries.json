@@ -1,0 +1,706 @@
+{
+  "A": {
+    "city": "A",
+    "total_rows": 87042418,
+    "num_unique_uids": 150000,
+    "rows_by_day_sample": {
+      "1": 945785,
+      "2": 849918,
+      "3": 1138718,
+      "4": 1044131,
+      "5": 1008488,
+      "6": 1065984,
+      "7": 1052609,
+      "8": 894012,
+      "9": 763799,
+      "10": 1003990
+    },
+    "days_total": 75,
+    "total_masked": 320391,
+    "total_unmasked": 86722027,
+    "days61_75": {
+      "total_rows": 19179916,
+      "masked": 320391,
+      "unmasked": 18859525
+    },
+    "target_range": {
+      "range": [
+        147001,
+        150000
+      ],
+      "users_present_in_data": 3000,
+      "stats": {
+        "num_users": 3000,
+        "train_rows": {
+          "count": 3000,
+          "min": 201.0,
+          "max": 903.0,
+          "mean": 320.1333333333333,
+          "median": 294.0,
+          "p10": 221.0,
+          "p25": 247.0,
+          "p75": 366.0,
+          "p90": 453.0999999999999
+        },
+        "test_total": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 521.0,
+          "mean": 106.797,
+          "median": 96.0,
+          "p10": 64.0,
+          "p25": 77.0,
+          "p75": 125.0,
+          "p90": 161.0
+        },
+        "test_masked": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 521.0,
+          "mean": 106.797,
+          "median": 96.0,
+          "p10": 64.0,
+          "p25": 77.0,
+          "p75": 125.0,
+          "p90": 161.0
+        },
+        "test_unmasked": {
+          "count": 3000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "total_rows": {
+          "count": 3000,
+          "min": 254.0,
+          "max": 1356.0,
+          "mean": 426.93033333333335,
+          "median": 397.0,
+          "p10": 300.0,
+          "p25": 335.0,
+          "p75": 485.0,
+          "p90": 592.0
+        },
+        "mask_density_stats": {
+          "count": 3000,
+          "min": 1.0,
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "p10": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "p90": 1.0
+        },
+        "users_with_unmasked_test_rows": 0
+      }
+    },
+    "non_target": {
+      "users_present_in_data": 147000,
+      "stats": {
+        "num_users": 147000,
+        "train_rows": {
+          "count": 147000,
+          "min": 201.0,
+          "max": 2514.0,
+          "mean": 455.1163401360544,
+          "median": 406.0,
+          "p10": 259.0,
+          "p25": 316.0,
+          "p75": 535.0,
+          "p90": 710.0
+        },
+        "test_total": {
+          "count": 147000,
+          "min": 51.0,
+          "max": 651.0,
+          "mean": 128.29608843537414,
+          "median": 115.0,
+          "p10": 72.0,
+          "p25": 90.0,
+          "p75": 152.0,
+          "p90": 201.0
+        },
+        "test_masked": {
+          "count": 147000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "test_unmasked": {
+          "count": 147000,
+          "min": 51.0,
+          "max": 651.0,
+          "mean": 128.29608843537414,
+          "median": 115.0,
+          "p10": 72.0,
+          "p25": 90.0,
+          "p75": 152.0,
+          "p90": 201.0
+        },
+        "total_rows": {
+          "count": 147000,
+          "min": 252.0,
+          "max": 3123.0,
+          "mean": 583.4124285714286,
+          "median": 521.0,
+          "p10": 344.0,
+          "p25": 413.0,
+          "p75": 682.0,
+          "p90": 898.0
+        },
+        "mask_density_stats": {
+          "count": 147000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "users_with_unmasked_test_rows": 147000
+      }
+    },
+    "distinct_cells_per_user": "COMPUTE_DISTINCT_CELLS=False (skipped)"
+  },
+  "B": {
+    "city": "B",
+    "total_rows": 18196993,
+    "num_unique_uids": 30000,
+    "rows_by_day_sample": {
+      "1": 209140,
+      "2": 186625,
+      "3": 238556,
+      "4": 218133,
+      "5": 214044,
+      "6": 220098,
+      "7": 220239,
+      "8": 193550,
+      "9": 162871,
+      "10": 215384
+    },
+    "days_total": 75,
+    "total_masked": 375498,
+    "total_unmasked": 17821495,
+    "days61_75": {
+      "total_rows": 4002560,
+      "masked": 375498,
+      "unmasked": 3627062
+    },
+    "target_range": {
+      "range": [
+        27001,
+        30000
+      ],
+      "users_present_in_data": 3000,
+      "stats": {
+        "num_users": 3000,
+        "train_rows": {
+          "count": 3000,
+          "min": 201.0,
+          "max": 1712.0,
+          "mean": 379.78,
+          "median": 339.5,
+          "p10": 230.0,
+          "p25": 269.0,
+          "p75": 443.0,
+          "p90": 577.0
+        },
+        "test_total": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 644.0,
+          "mean": 125.166,
+          "median": 113.0,
+          "p10": 68.0,
+          "p25": 86.0,
+          "p75": 149.0,
+          "p90": 198.0
+        },
+        "test_masked": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 644.0,
+          "mean": 125.166,
+          "median": 113.0,
+          "p10": 68.0,
+          "p25": 86.0,
+          "p75": 149.0,
+          "p90": 198.0
+        },
+        "test_unmasked": {
+          "count": 3000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "total_rows": {
+          "count": 3000,
+          "min": 253.0,
+          "max": 2279.0,
+          "mean": 504.946,
+          "median": 455.0,
+          "p10": 319.0,
+          "p25": 369.0,
+          "p75": 585.0,
+          "p90": 752.0
+        },
+        "mask_density_stats": {
+          "count": 3000,
+          "min": 1.0,
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "p10": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "p90": 1.0
+        },
+        "users_with_unmasked_test_rows": 0
+      }
+    },
+    "non_target": {
+      "users_present_in_data": 27000,
+      "stats": {
+        "num_users": 27000,
+        "train_rows": {
+          "count": 27000,
+          "min": 201.0,
+          "max": 2598.0,
+          "mean": 483.52196296296296,
+          "median": 433.0,
+          "p10": 273.0,
+          "p25": 338.0,
+          "p75": 569.0,
+          "p90": 752.0
+        },
+        "test_total": {
+          "count": 27000,
+          "min": 51.0,
+          "max": 663.0,
+          "mean": 134.33562962962964,
+          "median": 121.0,
+          "p10": 75.0,
+          "p25": 93.0,
+          "p75": 160.0,
+          "p90": 210.0
+        },
+        "test_masked": {
+          "count": 27000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "test_unmasked": {
+          "count": 27000,
+          "min": 51.0,
+          "max": 663.0,
+          "mean": 134.33562962962964,
+          "median": 121.0,
+          "p10": 75.0,
+          "p25": 93.0,
+          "p75": 160.0,
+          "p90": 210.0
+        },
+        "total_rows": {
+          "count": 27000,
+          "min": 254.0,
+          "max": 3261.0,
+          "mean": 617.8575925925926,
+          "median": 553.0,
+          "p10": 360.0,
+          "p25": 438.0,
+          "p75": 724.0,
+          "p90": 952.0
+        },
+        "mask_density_stats": {
+          "count": 27000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "users_with_unmasked_test_rows": 27000
+      }
+    },
+    "distinct_cells_per_user": "COMPUTE_DISTINCT_CELLS=False (skipped)"
+  },
+  "C": {
+    "city": "C",
+    "total_rows": 14475147,
+    "num_unique_uids": 25000,
+    "rows_by_day_sample": {
+      "1": 168075,
+      "2": 152153,
+      "3": 199290,
+      "4": 180824,
+      "5": 174445,
+      "6": 177052,
+      "7": 179695,
+      "8": 156317,
+      "9": 132606,
+      "10": 174642
+    },
+    "days_total": 75,
+    "total_masked": 294627,
+    "total_unmasked": 14180520,
+    "days61_75": {
+      "total_rows": 3248335,
+      "masked": 294627,
+      "unmasked": 2953708
+    },
+    "target_range": {
+      "range": [
+        22001,
+        25000
+      ],
+      "users_present_in_data": 3000,
+      "stats": {
+        "num_users": 3000,
+        "train_rows": {
+          "count": 3000,
+          "min": 201.0,
+          "max": 2001.0,
+          "mean": 404.255,
+          "median": 366.0,
+          "p10": 246.0,
+          "p25": 295.0,
+          "p75": 468.0,
+          "p90": 606.0
+        },
+        "test_total": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 308.0,
+          "mean": 98.209,
+          "median": 89.0,
+          "p10": 59.0,
+          "p25": 70.0,
+          "p75": 115.0,
+          "p90": 150.0
+        },
+        "test_masked": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 308.0,
+          "mean": 98.209,
+          "median": 89.0,
+          "p10": 59.0,
+          "p25": 70.0,
+          "p75": 115.0,
+          "p90": 150.0
+        },
+        "test_unmasked": {
+          "count": 3000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "total_rows": {
+          "count": 3000,
+          "min": 252.0,
+          "max": 2065.0,
+          "mean": 502.464,
+          "median": 461.0,
+          "p10": 325.0,
+          "p25": 382.0,
+          "p75": 578.0,
+          "p90": 728.0999999999999
+        },
+        "mask_density_stats": {
+          "count": 3000,
+          "min": 1.0,
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "p10": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "p90": 1.0
+        },
+        "users_with_unmasked_test_rows": 0
+      }
+    },
+    "non_target": {
+      "users_present_in_data": 22000,
+      "stats": {
+        "num_users": 22000,
+        "train_rows": {
+          "count": 22000,
+          "min": 201.0,
+          "max": 2430.0,
+          "mean": 455.1839545454545,
+          "median": 405.0,
+          "p10": 255.0,
+          "p25": 314.0,
+          "p75": 537.0,
+          "p90": 716.0
+        },
+        "test_total": {
+          "count": 22000,
+          "min": 51.0,
+          "max": 705.0,
+          "mean": 134.25945454545456,
+          "median": 119.0,
+          "p10": 72.0,
+          "p25": 90.0,
+          "p75": 163.0,
+          "p90": 216.0
+        },
+        "test_masked": {
+          "count": 22000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "test_unmasked": {
+          "count": 22000,
+          "min": 51.0,
+          "max": 705.0,
+          "mean": 134.25945454545456,
+          "median": 119.0,
+          "p10": 72.0,
+          "p25": 90.0,
+          "p75": 163.0,
+          "p90": 216.0
+        },
+        "total_rows": {
+          "count": 22000,
+          "min": 252.0,
+          "max": 3061.0,
+          "mean": 589.4434090909091,
+          "median": 528.0,
+          "p10": 351.0,
+          "p25": 419.0,
+          "p75": 687.0,
+          "p90": 908.0
+        },
+        "mask_density_stats": {
+          "count": 22000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "users_with_unmasked_test_rows": 22000
+      }
+    },
+    "distinct_cells_per_user": "COMPUTE_DISTINCT_CELLS=False (skipped)"
+  },
+  "D": {
+    "city": "D",
+    "total_rows": 12030078,
+    "num_unique_uids": 20000,
+    "rows_by_day_sample": {
+      "1": 141518,
+      "2": 130468,
+      "3": 165046,
+      "4": 148527,
+      "5": 144737,
+      "6": 146490,
+      "7": 147025,
+      "8": 129202,
+      "9": 111918,
+      "10": 140164
+    },
+    "days_total": 75,
+    "total_masked": 309413,
+    "total_unmasked": 11720665,
+    "days61_75": {
+      "total_rows": 2671295,
+      "masked": 309413,
+      "unmasked": 2361882
+    },
+    "target_range": {
+      "range": [
+        17001,
+        20000
+      ],
+      "users_present_in_data": 3000,
+      "stats": {
+        "num_users": 3000,
+        "train_rows": {
+          "count": 3000,
+          "min": 201.0,
+          "max": 1695.0,
+          "mean": 419.065,
+          "median": 384.0,
+          "p10": 253.0,
+          "p25": 307.75,
+          "p75": 485.0,
+          "p90": 621.0
+        },
+        "test_total": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 345.0,
+          "mean": 103.13766666666666,
+          "median": 96.0,
+          "p10": 63.0,
+          "p25": 77.0,
+          "p75": 122.0,
+          "p90": 150.0
+        },
+        "test_masked": {
+          "count": 3000,
+          "min": 51.0,
+          "max": 345.0,
+          "mean": 103.13766666666666,
+          "median": 96.0,
+          "p10": 63.0,
+          "p25": 77.0,
+          "p75": 122.0,
+          "p90": 150.0
+        },
+        "test_unmasked": {
+          "count": 3000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "total_rows": {
+          "count": 3000,
+          "min": 255.0,
+          "max": 1939.0,
+          "mean": 522.2026666666667,
+          "median": 486.0,
+          "p10": 336.90000000000003,
+          "p25": 396.0,
+          "p75": 598.0,
+          "p90": 742.0
+        },
+        "mask_density_stats": {
+          "count": 3000,
+          "min": 1.0,
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "p10": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "p90": 1.0
+        },
+        "users_with_unmasked_test_rows": 0
+      }
+    },
+    "non_target": {
+      "users_present_in_data": 17000,
+      "stats": {
+        "num_users": 17000,
+        "train_rows": {
+          "count": 17000,
+          "min": 201.0,
+          "max": 2468.0,
+          "mean": 476.564,
+          "median": 428.0,
+          "p10": 265.0,
+          "p25": 332.0,
+          "p75": 565.0,
+          "p90": 738.0
+        },
+        "test_total": {
+          "count": 17000,
+          "min": 51.0,
+          "max": 711.0,
+          "mean": 138.93423529411766,
+          "median": 126.0,
+          "p10": 76.0,
+          "p25": 96.0,
+          "p75": 167.0,
+          "p90": 215.0
+        },
+        "test_masked": {
+          "count": 17000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "test_unmasked": {
+          "count": 17000,
+          "min": 51.0,
+          "max": 711.0,
+          "mean": 138.93423529411766,
+          "median": 126.0,
+          "p10": 76.0,
+          "p25": 96.0,
+          "p75": 167.0,
+          "p90": 215.0
+        },
+        "total_rows": {
+          "count": 17000,
+          "min": 252.0,
+          "max": 3128.0,
+          "mean": 615.4982352941176,
+          "median": 556.0,
+          "p10": 366.0,
+          "p25": 441.0,
+          "p75": 722.0,
+          "p90": 931.0
+        },
+        "mask_density_stats": {
+          "count": 17000,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0
+        },
+        "users_with_unmasked_test_rows": 17000
+      }
+    },
+    "distinct_cells_per_user": "COMPUTE_DISTINCT_CELLS=False (skipped)"
+  }
+}
