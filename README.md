@@ -1,6 +1,6 @@
 # HuMob (BTP-2)
 
-## baseline results
+## Statistical baselines
 
 | Metric                    | City A   | City B   | City C   | City D   | Average  |
 |---------------------------|----------|----------|----------|----------|----------|
@@ -11,9 +11,21 @@
 | Unigram Model             | 0.03585  | 0.04105  | 0.03726  | 0.04309  | 0.03932  |
 | Bigram Model              | 0.05243  | 0.05974  | 0.05380  | 0.06066  | 0.05666  |
 | Bigram Model (top_p=0.7)  | 0.07819  | 0.08984  | 0.08002  | 0.09044  | 0.08463  |
-| TT-KNN (day wise)         | 0.21327  | 0.22456  | 0.23458  | 0.23771  | 0.22750  |
-| SVR(LightGBM + XGBoost)         | -  | 0.1390  | 0.1493  | 0.1536  | 0.1473  |
 
+## TTKNN models
+
+| Metric                    | City A   | City B   | City C   | City D   | Average  |
+|---------------------------|----------|----------|----------|----------|----------|
+| TT-KNN                    | 0.08741  | 0.09649  | 0.08558  | 0.09782  | 0.09183  |
+| Freq TT-KNN               | 0.09603  | 0.10185  | 0.09032  | 0.10250  | 0.09768  |
+| Cluster TT-KNN(kmeans)    | 0.10480  | 0.10626  | 0.09532  | 0.10638  | 0.10319  |
+| Cluster TT-KNN(Birch)     | 0.10532  | 0.10679  | 0.09621  | 0.10660  | 0.10373  |
+| Cluster TT-KNN(HDBSCAN)   | 0.10572  | 0.10724  | 0.09708  | 0.10748  | 0.10438  |
+<!-- | SVR(LightGBM + XGBoost)   | -        | 0.1390   | 0.1493   | 0.1536   | 0.1473   | -->
+
+## presention
+
+- mid presentation : https://www.canva.com/design/DAGysLr3Pd8/zHUAVrSGkmUtzH9XXhz-TQ/edit?utm_content=DAGysLr3Pd8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ## Important Dates
 
