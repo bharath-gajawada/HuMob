@@ -21,11 +21,28 @@
 | Cluster TT-KNN(kmeans)    | 0.10480  | 0.10626  | 0.09532  | 0.10638  | 0.10319  |
 | Cluster TT-KNN(Birch)     | 0.10532  | 0.10679  | 0.09621  | 0.10660  | 0.10373  |
 | Cluster TT-KNN(HDBSCAN)   | 0.10572  | 0.10724  | 0.09708  | 0.10748  | 0.10438  |
+
+## PPM models
+
+| Metric                      | City A   | City B   | City C   | City D   | Average  |
+|-----------------------------|----------|----------|----------|----------|----------|
+| Cosine matching without POI | 0.102656 | 0.110432 | 0.101560 | 0.106077 | 0.105180 |
+| Cosine matching with POI    | 0.102500 | 0.110233 | 0.101368 | 0.105866 | 0.104992 |
+| Hybrid model                | 0.098718 | 0.106067 | 0.097953 | 0.102318 | 0.101264 |
+| Ensemble model              | 0.102559 | 0.110390 | 0.101226 | 0.105890 | 0.105016 |
+                    
+## other models
+
+| Metric                    | City A   | City B   | City C   | City D   | Average  |
+|---------------------------|----------|----------|----------|----------|----------|
+| timesfm                   | 0.011985 | 0.014808 | 0.016590 | 0.018330 | 0.015428 |
 <!-- | SVR(LightGBM + XGBoost)   | -        | 0.1390   | 0.1493   | 0.1536   | 0.1473   | -->
 
 ## presention
 
 - mid presentation : https://www.canva.com/design/DAGysLr3Pd8/zHUAVrSGkmUtzH9XXhz-TQ/edit?utm_content=DAGysLr3Pd8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
+- final presentation : https://www.canva.com/design/DAG4aJbrciM/tsVcD2OMGXS5OQDyj4kvUg/edit?utm_content=DAG4aJbrciM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ## Important Dates
 
